@@ -15,10 +15,6 @@ class RoomListView(generics.ListAPIView):
     serializer_class = RoomSerializer
 
 
-class RoomCreateView(generics.CreateAPIView):
-    queryset = Room.objects.all()
-    serializer_class = RoomSerializer
-
 class RoomCreateView(APIView):
     serializer_class = RoomCreateSerializer
 
@@ -43,3 +39,5 @@ class RoomCreateView(APIView):
                 room.save()
 
             return Response(RoomSerializer(room).data, status.HTTP_201_CREATED)
+
+        return Response(status.HTTP_400_BAD_REQUEST)
