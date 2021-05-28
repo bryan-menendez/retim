@@ -40,7 +40,7 @@ export default class RoomCreatePage extends Component {
         fetch('/api/room/create', requestOptions).then((response) => {
             return response.json()
         }).then((data) => {
-            console.log(data);
+            this.props.history.push('/room/' + data.code)
         })
     }
 

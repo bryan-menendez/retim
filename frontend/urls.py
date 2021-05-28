@@ -5,4 +5,5 @@ urlpatterns = [
     path('', views.index),
     path('room/join', views.index),
     path('room/create', views.index),
+    path('room/<str:roomCode>', views.index),
 ]
