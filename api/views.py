@@ -49,11 +49,11 @@ class RoomUpdateView(APIView):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
-            code = serializer.data.get('roomCode')
+            code = serializer.data.get('code')
 
             queryset = Room.objects.filter(code=code)
             if not queryset.exists():
-                return Response({'msg': 'room does not exist'}, status=status.HTTP_404_NOT_FOUND)
+                return Response({'msg': 'Room does not exist'}, status=status.HTTP_404_NOT_FOUND)
             else:
                 room = queryset[0]
                 user_id = self.request.session.session_key
@@ -63,11 +63,13 @@ class RoomUpdateView(APIView):
                     room.votes_to_skip = serializer.data.get('votes_to_skip')
                     room.save(update_fields=['guest_can_pause', 'votes_to_skip'])
 
-                    return Response(RoomSerializer(room).data, status=status.HTTP_202_ACCEPTED)
+                    json = RoomSerializer(room).data
+                    json["msg"] = "Room updated successfully"
+                    return Response(json, status=status.HTTP_202_ACCEPTED)
                 else:
-                    return Response({'msg': 'room not owned by current user'}, status=status.HTTP_403_FORBIDDEN)
+                    return Response({'msg': 'Room not owned by the current user'}, status=status.HTTP_403_FORBIDDEN)
         else:
-            return Response({'msg': 'malformed req'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'msg': 'Malformed request'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RoomExistsView(APIView):
